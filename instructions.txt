@@ -1,0 +1,92 @@
+Downloaded phantomjs.  
+Downloaded npm install -g casperjs
+
+Went into the folder that Casperjs was installed in and opened bootstrap.js, where I made the following changes so that casper would be compatible with phantom.
+
+I added these lines on line 56 ( out of context )
+
+
+    //added these next 4 lines
+    var system = require('system');
+    var argsdeprecated = system.args;
+    argsdeprecated.shift();
+    phantom.args = argsdeprecated;
+    //added these previous 4 lines
+
+
+
+
+
+Here are the lines in context:
+
+
+
+// Common polyfills
+void function() {
+
+    // cujos bind shim instead of MDN shim, see #1396
+    var isFunction = function(o) {
+      return 'function' === typeof o;
+    };
+    var bind;
+    var slice = [].slice;
+    var proto = Function.prototype;
+    var featureMap = {
+      'function-bind': 'bind'
+    };
+
+
+    //added these next 4 lines
+    var system = require('system');
+    var argsdeprecated = system.args;
+    argsdeprecated.shift();
+    phantom.args = argsdeprecated;
+    //added these previous 4 lines
+
+
+
+    function has(feature) {
+      var prop = featureMap[feature];
+      return isFunction(proto[prop]);
+    }
+
+
+//////
+
+I also commented out these two functions on line 100-something
+
+    // function __die(message) {
+    //     if (message) {
+    //         console.error(message);
+    //     }
+    //     __exit(1);
+    // }
+
+    // function __terminate(message) {
+    //     if (message) {
+    //         console.log(message);
+    //     }
+    //     __exit();
+    // }
+
+
+In my project, I tested to see if casper was working by creating a file called test.js in my project folder and putting this code in it
+
+
+
+var casper = require('casper').create();
+
+casper.start('http://casperjs.org/', function() {
+    this.echo(this.getTitle());
+});
+
+casper.thenOpen('http://phantomjs.org', function() {
+    this.echo(this.getTitle());
+});
+
+casper.run();
+
+
+
+Then I ran it in terminal with
+casperjs test.js
