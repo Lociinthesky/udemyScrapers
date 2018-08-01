@@ -31,26 +31,19 @@ casper.then(function() {
 })
 
 casper.then(function() {
-	doc = document;
-	this.evaluate(function(){
-		this.echo(document.querySelector('li.tracking__status').children[1].innerText)
-		document.querySelector('li.tracking__status').children[1].innerText;
-
-		return document.querySelector('li.tracking__status').children[1].innerText;
+	mostRecentNews = this.evaluate(function(){
+		mostRecentNews = document.getElementsByClassName('tracking__message')[0].innerText.trim();
+		return mostRecentNews;
 	})
-	this.evaluate(function(){
-		this.echo(document.querySelector('li.tracking__status').children[2].innerText)
-		document.querySelector('li.tracking__status').children[2].innerText;
-		return document.querySelector('li.tracking__status').children[2].innerText;
-
+	mostRecentTime = this.evaluate(function(){
+		mostRecentTime = document.getElementsByClassName('tracking__time')[0].innerText.trim();
+		return mostRecentTime;
 	})
+
 
 })
 casper.run(function(){
 	this.echo(' results \n\n ' + mostRecentNews);
-	this.echo(doc.querySelector('li.tracking__status').children[1].innerText)
-
-	this.echo(doc.querySelector('li.tracking__status').children[2].innerText)
 	this.echo(' results \n\n ' + mostRecentTime).exit();
 });
 
