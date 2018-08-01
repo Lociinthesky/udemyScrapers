@@ -6,21 +6,93 @@ var casper = require('casper').create({
 
 	var mostRecentNews = '';
 	var mostRecentTime = '';
-function c() {
-	var form = document.querySelector('input #reference_number');
-}
+// function submit(trackingNumber) {
+// 	return function() {
+// 		var field = document.querySelector('button').nextElementSibling;
+// 		field.value = trackingNumber;
+// 		casper.capture('pic1.png')
+// 		field.click();
+// 	}
+// }
 
-casper.start('https://app.memoryleague.com/#!/home', function() {
-	this.fill('form[action="https://www.parcelmonkey.com/track#tracking"]', {
-		text:'PMSFIXQP'
-	}, true)
+var messageArr = [];
+var doc;
+casper.start('https://www.parcelmonkey.com/track', function() {
+	console.log('parcelmonkey website opened')
+})
+	
+casper.then(function() {
+	this.evaluate(function() {
+		console.log('log::: ' + document.querySelector('#reference_number'))
+		document.querySelector('#reference_number').value = 'PMSFIXQP';
+		document.querySelectorAll('button')[1].click()
+	})
+	console.log('submitted');
 })
 
-	
-.then(function() {
-	mostRecentNews = document.querySelector('p.tracking__message').innerText;
-	mostRecentTime = document.querySelector('p.tracking__time').innerText;
+casper.then(function() {
+	doc = document;
+	this.evaluate(function(){
+		this.echo(document.querySelector('li.tracking__status').children[1].innerText)
+		document.querySelector('li.tracking__status').children[1].innerText;
+
+		return document.querySelector('li.tracking__status').children[1].innerText;
 	})
+	this.evaluate(function(){
+		this.echo(document.querySelector('li.tracking__status').children[2].innerText)
+		document.querySelector('li.tracking__status').children[2].innerText;
+		return document.querySelector('li.tracking__status').children[2].innerText;
+
+	})
+
+})
 casper.run(function(){
-	this.echo(' results \n\n ' + matchOutcome).exit();
+	this.echo(' results \n\n ' + mostRecentNews);
+	this.echo(doc.querySelector('li.tracking__status').children[1].innerText)
+
+	this.echo(doc.querySelector('li.tracking__status').children[2].innerText)
+	this.echo(' results \n\n ' + mostRecentTime).exit();
 });
+
+
+
+
+//AMAZON
+
+// var casper = require('casper').create({
+//     pageSettings: {
+//         loadImages: false,//The script is much faster when this field is set to false
+//         loadPlugins: false,
+//         userAgent: 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36'
+//     }
+// });
+ 
+// //First step is to open Amazon
+// casper.start().thenOpen("https://amazon.com", function() {
+//     console.log("Amazon website opened");
+// });
+ 
+// //Second step is to click to the Sign-in button
+// casper.then(function(){
+//    this.evaluate(function(){
+//       document.getElementById("nav-tools").children[0].click();
+//    });
+// });
+ 
+// //Now we have to populate username and password, and submit the form
+// casper.then(function(){
+//     console.log("Login using username and password");
+//     this.evaluate(function(){
+//         document.getElementById("ap_email").value="AMAZON USERNAME";
+//         document.getElementById("ap_password").value="AMAZON PASSWORD";
+//         document.getElementById("signInSubmit").click();
+//     });
+// });
+ 
+// //Wait to be redirected to the Home page, and then make a screenshot
+// casper.then(function(){
+//     console.log("Make a screenshot and save it as AfterLogin.png");
+//     this.capture('AfterLogin.png');
+// });
+ 
+// casper.run();
