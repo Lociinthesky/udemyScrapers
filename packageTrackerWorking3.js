@@ -8,7 +8,20 @@ var fs = require('fs')
 var mostRecentNews = '';
 var mostRecentTime = '';
 var indexCode = "var twilio = require('twilio'); \n"
-indexCode += "var client = new twilio('AC1e1979a7c3d1e8a7ccec2bec84beb978', '44e83d0b1e2b84c1eb7acc7dd9b15dc0');"
+indexCode += "var client = new twilio('AC1e1979a7c3d1e8a7ccec2bec84beb978', '44e83d0b1e2b84c1eb7acc7dd9b15dc0'); \n"
+indexCode += "client.messages.create({ \n" +
+		"to: '+19727466590', \n" +
+		"from: '+14696063720', \n" +
+		"body: 'test!!!!' });"
+
+function createSMS(news, time) {
+	time = time.replace(/2018\,\s/, '');
+	var sms = 'Oculus Go Update:   On ' + time + ': ' + news;	
+	indexCode = indexCode.replace(/test!!!!/, sms);
+}
+	
+
+
 
 
 var messageArr = [];
@@ -52,6 +65,7 @@ function again(news, time){
 			scrapeCount++;
 			if ( scrapeCount == 1 ) {
 				var filename = 'newIndex' + scrapeCount + '.js'
+				createSMS(news, time);
 				this.echo(indexCode);
 				fs.write(filename, indexCode, 'w');
 			}

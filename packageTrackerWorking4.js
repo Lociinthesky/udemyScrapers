@@ -65,8 +65,8 @@ function again(news, time){
 		casper.run(function(){
 			this.echo('scrapeCount = ' + scrapeCount);
 			scrapeCount++;
-			if ( scrapeCount < 2 ) {
-				var filename = 'newIndexxx' + scrapeCount + '.js'
+			if ( scrapeCount < 1 ) {
+				var filename = 'newIndex' + scrapeCount + '.js'
 				createSMS(news, time);
 				this.echo(indexCode);
 				fs.write(filename, indexCode, 'w');
