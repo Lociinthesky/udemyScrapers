@@ -10,40 +10,43 @@ var casper = require('casper').create({
 
 var messageArr = [];
 var doc;
-function again(news, time){
-	casper.start('https://www.parcelmonkey.com/track', function() {
-		console.log('parcelmonkey website opened')
-	})
-		
-	casper.then(function() {
-		this.evaluate(function() {
-			console.log('log::: ' + document.querySelector('#reference_number'))
-			document.querySelector('#reference_number').value = 'PMSFIXQP';
-			document.querySelectorAll('button')[1].click()
+function wrap() {
+	function again(news, time){
+		casper.start('https://www.parcelmonkey.com/track', function() {
+			console.log('parcelmonkey website opened')
 		})
-		console.log('submitted');
-	})
-
-	casper.then(function() {
-		news = this.evaluate(function(){
-			news = document.getElementsByClassName('tracking__message')[0].innerText.trim();
-			return news;
-		})
-		time = this.evaluate(function(){
-			time = document.getElementsByClassName('tracking__time')[0].innerText.trim();
-			return time;
+			
+		casper.then(function() {
+			this.evaluate(function() {
+				console.log('log::: ' + document.querySelector('#reference_number'))
+				document.querySelector('#reference_number').value = 'PMSFIXQP';
+				document.querySelectorAll('button')[1].click()
+			})
+			console.log('submitted');
 		})
 
-	})
+		casper.then(function() {
+			news = this.evaluate(function(){
+				news = document.getElementsByClassName('tracking__message')[0].innerText.trim();
+				return news;
+			})
+			time = this.evaluate(function(){
+				time = document.getElementsByClassName('tracking__time')[0].innerText.trim();
+				return time;
+			})
 
-	casper.run(function(){
-		this.echo(' results \n\n ' + news);
-		this.echo(' results \n\n ' + time).exit();
-	});
+		})
 
-}
+		casper.run(function(){
+			this.echo(' results \n\n ' + news);
+			this.echo(' results \n\n ' + time).exit();
+		});
+
+	}
 again(mostRecentNews, mostRecentTime);
 //3600000
+setTimeout(wrap, 15000)
+}
 
 
 
