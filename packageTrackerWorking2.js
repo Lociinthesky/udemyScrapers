@@ -10,50 +10,65 @@ var casper = require('casper').create({
 
 var messageArr = [];
 var doc;
+var scrapeCount = 0;
 function again(news, time){
-	casper.start('https://www.parcelmonkey.com/track', function() {
-		console.log('parcelmonkey website opened')
-	})
-		
-	casper.then(function() {
-		this.evaluate(function() {
-			console.log('log::: ' + document.querySelector('#reference_number'))
-			document.querySelector('#reference_number').value = 'PMSFIXQP';
+	if ( scrapeCount < 1 ) {
+		casper.start('https://www.parcelmonkey.com/track', function() {
+			console.log('parcelmonkey website opened')
 		})
-		console.log('filled');
-	})
+		
+		casper.then(function() {
+			this.evaluate(function() {
+				console.log('log::: ' + document.querySelector('#reference_number'))
+				document.querySelector('#reference_number').value = 'PMSFIXQP';
+			})
+			console.log('filled');
+		})
 
 		casper.then(function() {
-		this.evaluate(function() {
-			document.querySelectorAll('button')[1].click()
+			this.evaluate(function() {
+				document.querySelectorAll('button')[1].click()
+			})
+			console.log('clicked');
 		})
-		console.log('clicked');
-	})
-	casper.then(function() {
-		news = this.evaluate(function(){
-			news = document.getElementsByClassName('tracking__message')[0].innerText.trim();
-			return news;
+		casper.then(function() {
+			news = this.evaluate(function(){
+				news = document.getElementsByClassName('tracking__message')[0].innerText.trim();
+				return news;
+			})
+			this.echo('news: ' + news)
+			time = this.evaluate(function(){
+				time = document.getElementsByClassName('tracking__time')[0].innerText.trim();
+				return time;
+			})
+			this.echo('time: ' + time)
 		})
-		this.echo('news: ' + news)
-		time = this.evaluate(function(){
-			time = document.getElementsByClassName('tracking__time')[0].innerText.trim();
-			return time;
+		casper.run(function(){
+			this.echo('scrapeCount = ' + scrapeCount);
+			scrapeCount++;
+		});
+	} else {
+		casper.start('https://www.google.com', function() {
+			this.echo('made it to google, now exit.');
 		})
-		this.echo('time: ' + time)
-	})
-
-	casper.run(function(){
-		this.echo(' results \n\n ' + news);
-		this.echo(' results \n\n ' + time);
-	});
+		casper.run(function() {
+			casper.capture('googlehome.png')
+			.exit()
+		});
+	}
 
 }
 setInterval(function(){
 	return again(mostRecentNews, mostRecentTime)
-	}, 1800000)
+	}, 18000)
 //3600000
 
-
+// var casper = require('casper').create()
+// 	.start('http://www.katiekermode.com/Memory/Kerliminator.html')
+// 	.run(function(){
+// 		casper.capture('deck2.png')
+// 		.exit()
+// 	});
 
 //AMAZON
 

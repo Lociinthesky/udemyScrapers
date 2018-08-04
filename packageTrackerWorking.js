@@ -10,6 +10,7 @@ var casper = require('casper').create({
 
 var messageArr = [];
 var doc;
+var scrapeCount = 0;
 function again(news, time){
 	casper.start('https://www.parcelmonkey.com/track', function() {
 		console.log('parcelmonkey website opened')
@@ -19,32 +20,38 @@ function again(news, time){
 		this.evaluate(function() {
 			console.log('log::: ' + document.querySelector('#reference_number'))
 			document.querySelector('#reference_number').value = 'PMSFIXQP';
-			document.querySelectorAll('button')[1].click()
 		})
-		console.log('submitted');
+		console.log('filled');
 	})
 
+	casper.then(function() {
+		this.evaluate(function() {
+			document.querySelectorAll('button')[1].click()
+		})
+		console.log('clicked');
+	})
 	casper.then(function() {
 		news = this.evaluate(function(){
 			news = document.getElementsByClassName('tracking__message')[0].innerText.trim();
 			return news;
 		})
+		this.echo('news: ' + news)
 		time = this.evaluate(function(){
 			time = document.getElementsByClassName('tracking__time')[0].innerText.trim();
 			return time;
 		})
-
+		this.echo('time: ' + time)
 	})
 
 	casper.run(function(){
-		this.echo(' results \n\n ' + news);
-		this.echo(' results \n\n ' + time).exit();
+		this.echo('scrapeCount = ' + scrapeCount);
+		scrapeCount++;
 	});
 
 }
 setInterval(function(){
 	return again(mostRecentNews, mostRecentTime)
-	}, 15000)
+	}, 18000)
 //3600000
 
 
