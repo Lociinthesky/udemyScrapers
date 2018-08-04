@@ -12,7 +12,7 @@ var messageArr = [];
 var doc;
 var scrapeCount = 0;
 function again(news, time){
-	if ( scrapeCount < 1 ) {
+	if ( scrapeCount < 5000 ) {
 		casper.start('https://www.parcelmonkey.com/track', function() {
 			console.log('parcelmonkey website opened')
 		})
@@ -47,20 +47,44 @@ function again(news, time){
 			this.echo('scrapeCount = ' + scrapeCount);
 			scrapeCount++;
 		});
+		//input bar has no id, class ._1frb
+		//action="/search/web/direct_search.php"
+
 	} else {
-		casper.start('https://www.google.com', function() {
-			this.echo('made it to google, now exit.');
+		casper.start('https://www.facebook.com', function() {
+			console.log('homepage loaded')
 		})
-		casper.run(function() {
-			casper.capture('googlehome.png')
-			.exit()
-		});
+
+		casper.then(function() {
+			this.evaluate(function() {
+				document.getElementById('email').value = 'lociinthesky@gmail.com'
+				document.getElementById('pass').value = 'hailey'
+   		 this.capture('BeforeLogin.png');
+
+				document.getElementById("loginbutton").children[0].click();
+			})	
+		})
+
+		casper.then(function(){
+    		console.log("Make two screenshots and save it as AfterLogin2.png");
+   		 this.capture('AfterLogin3.png');
+			
+			this.wait(10000, function(){
+// After 6 seconds, this callback will be called, and then we will capture:
+				this.capture('AfterLogin5.png');
+			});
+		})
+ 
+		casper.run();
 	}
 
 }
 setInterval(function(){
 	return again(mostRecentNews, mostRecentTime)
-	}, 18000)
+	}, 30000)
+
+//again(mostRecentNews, mostRecentTime)
+
 //3600000
 
 // var casper = require('casper').create()
