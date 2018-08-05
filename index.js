@@ -1,14 +1,25 @@
 var twilio = require('twilio');
-var client = new twilio('AC1e1979a7c3d1e8a7ccec2bec84beb978', 
-						'44e83d0b1e2b84c1eb7acc7dd9b15dc0');
-
-
-
-client.messages.create({
+var tokens = require('./tokens')
+var again = require('./packageTrackerWorking4').again
+var client = new twilio(tokens1, tokens2);
+var mostRecentNews = '';
+var previousNews = '';
+var mostRecentTime = '';
+var boolFlag = false;
+// client.messages.create({
+// 	to: '+19727466590',
+// 	from: '+14696063720',
+// 	body: 'test!!!!'
+// });
+var startingOptions = {
 	to: '+19727466590',
 	from: '+14696063720',
-	body: 'test!!!!'
-});
+	body: 'test!!!!' 
+}
 
-
-
+setInterval(function(){
+	if ( boolFlag === true ) {
+		console.log('we have made it!!!!!')
+	}
+	return again(mostRecentNews, mostRecentTime)
+}, 16000)

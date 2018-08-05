@@ -5,25 +5,37 @@ var casper = require('casper').create({
 });
 
 var fs = require('fs')
+var client = require('./index').client;
 var mostRecentNews = '';
 var previousNews = '';
 var mostRecentTime = '';
-var indexCode = "var twilio = require('twilio'); \n";
-indexCode += "var tokens = require('./tokens'); \n";
-indexCode += "var client = new twilio('tokens.token1', 'tokens.token2'); \n"
-indexCode += "client.messages.create({ \n" +
-		"to: '+19727466590', \n" +
-		"from: '+14696063720', \n" +
-		"body: 'test!!!!' });"
+var boolFlag = false;
+// var indexCode = "var twilio = require('twilio'); \n";
+// indexCode += "var tokens = require('./tokens'); \n";
+// indexCode += "var client = new twilio(tokens.token1, tokens.token2); \n"
+// indexCode += "client.messages.create({ \n" +
+// 		"to: '+19727466590', \n" +
+// 		"from: '+14696063720', \n" +
+// 		"body: 'test!!!!' });"
+
+// function createSMS(news, time) {
+// 	time = time.replace(/2018\,\s/, '');
+// 	var sms = 'Oculus Go Update:   On ' + time + ': ' + news;	
+// 	indexCode = indexCode.replace(/test!!!!/, sms);
+// }
+	
+
+var startingOptions = {
+	to: '+19727466590',
+	from: '+14696063720',
+	body: 'test!!!!' 
+}
 
 function createSMS(news, time) {
 	time = time.replace(/2018\,\s/, '');
 	var sms = 'Oculus Go Update:   On ' + time + ': ' + news;	
-	indexCode = indexCode.replace(/test!!!!/, sms);
+	startingOptions.body = sms;
 }
-	
-
-
 
 
 var messageArr = [];
@@ -64,21 +76,22 @@ function again(news, time){
 
 		casper.run(function(){
 			this.echo('scrapeCount = ' + scrapeCount);
-			scrapeCount++;
-			if ( scrapeCount < 1 ) {
-				var filename = 'newIndex' + scrapeCount + '.js'
-				createSMS(news, time);
-				this.echo(indexCode);
-				fs.write(filename, indexCode, 'w');
+			if ( scrapeCount  === 1 ) {
+				//console.log('scrape count equals one ')
+				boolFlag = true;
 			}
-		});
+			scrapeCount++;
+			previousNews = news;
+		});	
 	//}
 }
-setInterval(function(){
-	return again(mostRecentNews, mostRecentTime)
-}, 16000)
+
+// setInterval(function(){
+// 	return again(mostRecentNews, mostRecentTime)
+// }, 16000)
 //3600000
 
+module.exports = { again, casper }
 
 
 //AMAZON

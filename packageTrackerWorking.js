@@ -10,7 +10,7 @@ var previousNews = '';
 var mostRecentTime = '';
 var indexCode = "var twilio = require('twilio'); \n";
 indexCode += "var tokens = require('./tokens'); \n";
-indexCode += "var client = new twilio('tokens.token1', 'tokens.token2'); \n"
+indexCode += "var client = new twilio(tokens.token1, tokens.token2); \n"
 indexCode += "client.messages.create({ \n" +
 		"to: '+19727466590', \n" +
 		"from: '+14696063720', \n" +
